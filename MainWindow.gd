@@ -1,119 +1,84 @@
 extends Node
 
-var myfloat := [0.0]
-var mystr := [""]
-var values := [2.0, 4.0, 0.0, 3.0, 1.0, 5.0]
-var items := ["zero", "one", "two", "three", "four", "five"]
-var current_item := [2]
-var anim_counter := 0
-var wc_topmost: ImGuiWindowClassPtr
-var ms_items := items
-var ms_selection := []
-var table_items := []
+var menuFloat = [0.5]
+var menuChecked = true
+
+func ShowExampleMenuFile():
+	ImGui.MenuItemEx("(demo menu)", "", false, false)
+	ImGui.MenuItem("New")
+	ImGui.MenuItemEx("Open", "Ctrl+O")
+	if (ImGui.BeginMenu("Open Recent")):
+		ImGui.MenuItem("fish_hat.c")
+		ImGui.MenuItem("fish_hat.inl")
+		ImGui.MenuItem("fish_hat.h")
+		if (ImGui.BeginMenu("More..")):
+			ImGui.MenuItem("Hello")
+			ImGui.MenuItem("Sailor")
+			if (ImGui.BeginMenu("Recurse..")):
+				ShowExampleMenuFile()
+				ImGui.EndMenu()
+			ImGui.EndMenu()
+		ImGui.EndMenu()
+	ImGui.MenuItemEx("Save", "Ctrl+S")
+	ImGui.MenuItem("Save As..")
+
+	ImGui.Separator()
+	if (ImGui.BeginMenu("Options")):
+		var enabled = true
+		#ImGui.MenuItem("Enabled", "", &enabled)
+		ImGui.BeginChild("child", Vector2(0, 60))
+		for i in 10:
+			ImGui.Text("Scrolling Text %d" % i)
+		ImGui.EndChild()
+		var n = 0
+		ImGui.SliderFloat("Value", menuFloat, 0.0, 1.0)
+		ImGui.InputFloatEx("Input", menuFloat, 0.1)
+		#ImGui.Combo("Combo", n, "Yes\nNo\nMaybe\n\n")
+		ImGui.EndMenu()
+
+	if (ImGui.BeginMenu("Colors")):
+		var sz = ImGui.GetTextLineHeight()
+		for i in 10:
+			#var name = ImGui.GetStyleColorName((ImGuiCol)[i])
+			var p = ImGui.GetCursorScreenPos()
+			#ImGui.GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui.GetColorU32((ImGuiCol)i))
+			ImGui.Dummy(Vector2(sz, sz))
+			ImGui.SameLine()
+			ImGui.MenuItem(name)
+		ImGui.EndMenu()
+
+	#// Here we demonstrate appending again to the "Options" menu (which we already created above)
+	#// Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+	#// In a real code-base using it would make senses to use this feature from very different code locations.
+	if (ImGui.BeginMenu("Options")):
+		var b = [true]
+		ImGui.Checkbox("SomeOption", b)
+		ImGui.EndMenu()
+
+	#if (ImGui.BeginMenuEx("Disabled", false)):
+		#IM_ASSERT(0)
+	ImGui.MenuItemEx("Checked", "", menuChecked)
+	ImGui.Separator()
+	ImGui.MenuItemEx("Quit", "Alt+F4")
+
 
 func _ready():
 	Engine.max_fps = 60
-
 	var io := ImGui.GetIO()
-	io.ConfigFlags |= ImGui.ConfigFlags_ViewportsEnable
-
-	wc_topmost = ImGuiWindowClassPtr.new()
-	#wc_topmost.ViewportFlagsOverrideSet = ImGui.ViewportFlags_TopMost | ImGui.ViewportFlags_NoAutoMerge
-
-	var style := ImGui.GetStyle()
-	style.Colors[ImGui.Col_PlotHistogram] = Color.REBECCA_PURPLE
-	style.Colors[ImGui.Col_PlotHistogramHovered] = Color.SLATE_BLUE
-
-	for i in range(items.size()):
-		table_items.append([i, items[i]])
 
 func _process(_delta: float) -> void:
-	#ImGui.ShowDemoWindow()
-
-	var gdver: String = Engine.get_version_info()["string"]
-
-	if ImGui.Begin("Demo"):
-		ImGui.Text("ImGui in")
-		ImGui.SameLine()
-		ImGui.TextLinkOpenURLEx("Godot %s" % gdver, "https://www.godotengine.org")
-		ImGui.Text("mem %.1f KiB / peak %.1f KiB" % [
-			OS.get_static_memory_usage() / 1024.0,
-			OS.get_static_memory_peak_usage() / 1024.0])
-		ImGui.Separator()
-
-		ImGui.DragFloat("myfloat", myfloat)
-		ImGui.Text(str(myfloat[0]))
-		ImGui.InputText("mystr", mystr, 32)
-		ImGui.Text(mystr[0])
-
-		ImGui.PlotHistogram("histogram", values, values.size())
-		ImGui.PlotLines("lines", values, values.size())
-		ImGui.ListBox("choices", current_item, items, items.size())
-		ImGui.Combo("combo", current_item, items)
-		ImGui.Text("choice = %s" % items[current_item[0]])
-
-		ImGui.SeparatorText("Multi-Select")
-		if ImGui.BeginChild("MSItems", Vector2(0,0), ImGui.ChildFlags_FrameStyle):
-			var flags := ImGui.MultiSelectFlags_ClearOnEscape | ImGui.MultiSelectFlags_BoxSelect1d
-			var ms_io := ImGui.BeginMultiSelectEx(flags, ms_selection.size(), ms_items.size())
-			apply_selection_requests(ms_io)
-			for i in range(items.size()):
-				var is_selected := ms_selection.has(i)
-				ImGui.SetNextItemSelectionUserData(i)
-				ImGui.SelectableEx(ms_items[i], is_selected)
-			ms_io = ImGui.EndMultiSelect()
-			apply_selection_requests(ms_io)
-		ImGui.EndChild()
-	ImGui.End()
-
-	if ImGui.Begin("Sortable Table"):
-		if ImGui.BeginTable("sortable_table", 2, ImGui.TableFlags_Sortable):
-			ImGui.TableSetupColumn("ID", ImGui.TableColumnFlags_DefaultSort)
-			ImGui.TableSetupColumn("Name")
-			ImGui.TableSetupScrollFreeze(0, 1)
-			ImGui.TableHeadersRow()
-
-			var sort_specs := ImGui.TableGetSortSpecs()
-			if sort_specs.SpecsDirty:
-				for spec: ImGuiTableColumnSortSpecsPtr in sort_specs.Specs:
-					var col := spec.ColumnIndex
-					if spec.SortDirection == ImGui.SortDirection_Ascending:
-						table_items.sort_custom(func(lhs, rhs): return lhs[col] < rhs[col])
-					else:
-						table_items.sort_custom(func(lhs, rhs): return lhs[col] > rhs[col])
-				sort_specs.SpecsDirty = false
-
-			for i in range(table_items.size()):
-				ImGui.TableNextRow()
-				ImGui.TableNextColumn()
-				ImGui.Text("%d" % table_items[i][0])
-				ImGui.TableNextColumn()
-				ImGui.Text(table_items[i][1])
-			ImGui.EndTable()
-	ImGui.End()
-
-	ImGui.SetNextWindowClass(wc_topmost)
-	ImGui.SetNextWindowSize(Vector2(200, 200), ImGui.Cond_Once)
-	if ImGui.Begin("topmost viewport window"):
-		ImGui.TextWrapped("when this is a viewport window outside the main window, it will stay on top")
-	ImGui.End()
-
-func _physics_process(_delta: float) -> void:
-	anim_counter += 1
-	if anim_counter >= 10:
-		anim_counter = 0
-		values.push_back(values.pop_front())
-
-func apply_selection_requests(ms_io: ImGuiMultiSelectIOPtr) -> void:
-	for req: ImGuiSelectionRequestPtr in ms_io.Requests:
-		if req.Type == ImGui.SelectionRequestType_SetAll:
-			if req.Selected:
-				ms_selection = range(ms_items.size())
-			else:
-				ms_selection.clear()
-		elif req.Type == ImGui.SelectionRequestType_SetRange:
-			for i in range(req.RangeFirstItem, req.RangeLastItem + 1):
-				if req.Selected:
-					ms_selection.append(i)
-				else:
-					ms_selection.erase(i)
+	ImGui.ShowDemoWindow()
+	
+	if (ImGui.BeginMainMenuBar()):
+		if (ImGui.BeginMenu("File")):
+			ShowExampleMenuFile()
+			ImGui.EndMenu()
+		if (ImGui.BeginMenu("Edit")):
+			ImGui.MenuItem("Undo")
+			ImGui.MenuItem("Redo") # Disabled item
+			ImGui.Separator()
+			ImGui.MenuItem("Cut")
+			ImGui.MenuItem("Copy")
+			ImGui.MenuItem("Paste")
+			ImGui.EndMenu()
+		ImGui.EndMainMenuBar()
