@@ -2,13 +2,11 @@ extends Node
 
 const FileHandler = preload("res://FileHandler.gd")
 
-
 var menuFloat = [0.5]
 var enabled = true
 var n = [0]
 var b = [true]
 var selected = 0
-
 
 func MainMenu():
 	if (ImGui.BeginMainMenuBar()):
@@ -88,9 +86,6 @@ func MainWindow():
 		ImGui.EndChild()
 		ImGui.SameLine()
 	ImGui.End()
-
-func _ready():
-	Engine.max_fps = 60
 
 func _process(_delta: float) -> void:
 	MainMenu()
