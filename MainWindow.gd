@@ -1,6 +1,7 @@
 extends Node
 
 const FileHandler = preload("res://FileHandler.gd")
+var worldpallet = ColorPallet.new()
 
 var menuFloat = [0.5]
 var enabled = true
@@ -51,10 +52,8 @@ func MainWindow():
 	if (ImGui.Begin("Example: Fullscreen window", [true], ImGui.WindowFlags_NoDecoration | ImGui.WindowFlags_NoMove | ImGui.WindowFlags_NoSavedSettings)):
 		
 		# Left section
-		ImGui.BeginChild("left pane", Vector2(200, 0), ImGui.ChildFlags_Border | ImGui.ChildFlags_ResizeX)
-		for i in 20:
-			if (ImGui.SelectableEx("MyObject %d"%i, selected == i)):
-				selected = i
+		ImGui.BeginChild("left pane", Vector2(200, 0) ,ImGui.ChildFlags_Border)
+		worldpallet.drawPallet(7);
 		ImGui.EndChild()
 		ImGui.SameLine()
 		
