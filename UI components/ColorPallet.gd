@@ -2,27 +2,45 @@ class_name ColorPallet
 
 # Color pallet data, preloaded with bg color of black
 var colorPallet = [[0,0,0,1]]
+var colorSelection = 0;
 
 # On ready function
 func _ready():
 	pass
+
+# get Color from color array
+func color(colorArray):
+	return Color(colorArray[0],colorArray[1],colorArray[2],colorArray[3])
+
+#return color at index n
+func getColor(n):
+	return colorPallet[n]
 
 #draw pallet
 func drawPallet(width):
 	ImGui.BeginGroup()
 	# draw each member of pallet
 	for i in colorPallet.size():
+		var flags = ImGui.ColorEditFlags_NoBorder if (i==colorSelection) else 0
 		if(i == 0):
-			# Can't edit background color
-			ImGui.ColorButton("Background", Color(colorPallet[0][0],colorPallet[0][1],colorPallet[0][2]))
+			# Color zero is background
+			if(ImGui.ColorButton("Background", color(colorPallet[i]), flags )):
+				colorSelection = i;
 		else:
-			ImGui.ColorEdit3("color %d"%i, colorPallet[i], ImGui.ColorEditFlags_NoInputs | ImGui.ColorEditFlags_NoLabel)
+			if(ImGui.ColorButton("color %d"%i, color(colorPallet[i]), flags )):
+				colorSelection = i;
 		if(((i+1)%width) != 0):
 			ImGui.SameLine()
 	# Draw new pallet button
 	if(ImGui.ButtonEx("+", Vector2(20,20))):
 		colorPallet.push_back([0,0,0,1])
+		colorSelection = colorPallet.size()-1
+	ImGui.SeparatorText("Selected Color")
+	if(colorSelection == 0):
+		# Color zero is background, cant be changed
+		ImGui.ColorButton("Background", color(colorPallet[colorSelection]),ImGui.ColorEditFlags_NoBorder)
+	else:
+		ImGui.ColorEdit3("color %d"%colorSelection, colorPallet[colorSelection], ImGui.ColorEditFlags_NoInputs | ImGui.ColorEditFlags_NoLabel | ImGui.ColorEditFlags_NoBorder)
+	ImGui.SameLine()
+	ImGui.Text("color %d"%colorSelection)
 	ImGui.EndGroup()
-
-func getColor(n):
-	return colorPallet[n]
