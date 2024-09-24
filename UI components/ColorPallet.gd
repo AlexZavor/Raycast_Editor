@@ -1,7 +1,8 @@
+extends Node
 class_name ColorPallet
 
 # Color pallet data, preloaded with bg color of black
-var colorPallet = [[0,0,0,1]]
+var colorPallet = [[0,0,0,1],[1,0,0,1]]
 var colorSelection = 0;
 
 # On ready function
@@ -44,3 +45,16 @@ func drawPallet(width):
 	ImGui.SameLine()
 	ImGui.Text("color %d"%colorSelection)
 	ImGui.EndGroup()
+
+#translate array to color array
+func transArray(array):
+	var array2:Array
+	#var array2 = [[0 for x in range(array[0].size())] for y in range(array.size()]
+	for y in array.size():
+		array2.append([])
+		for x in array[0].size():
+			var i = array[y][x]
+			var colorarr = colorPallet[i]
+			var colorval = color(colorarr)
+			array2[y].append(colorval)
+	return array2

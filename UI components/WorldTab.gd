@@ -1,7 +1,7 @@
 extends Node
 class_name WorldEditorTab
 
-var worldPallet = ColorPallet.new()
+@onready var worldPallet = get_node("ColorPallet")
 @onready var worldCanvas = get_node("/root/Node/WorldCanvas")
 
 var selected_temp = 0
@@ -13,6 +13,7 @@ func drawWorldEditorTab():
 	ImGui.BeginChild("left pane", Vector2(200, 0) ,ImGui.ChildFlags_Border)
 	ImGui.BeginChild("pallet", Vector2(0,400), ImGui.ChildFlags_AutoResizeY)
 	worldPallet.drawPallet(7)
+	tool = worldPallet.colorSelection
 	ImGui.Dummy(Vector2(0,100))
 	ImGui.EndChild()
 	ImGui.SeparatorText("Tools")
