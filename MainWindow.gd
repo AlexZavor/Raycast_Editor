@@ -2,7 +2,7 @@ extends Node
 
 const FileHandler = preload("res://FileHandler.gd")
 
-var openLevel = LevelEditor.new()
+@onready var openLevel = get_node("/root/Node/LevelEditor")
 
 var menuFloat = [0.5]
 var enabled = true
@@ -44,6 +44,7 @@ func MainMenu():
 func MainWindow():
 	#Set shape of fullscreen window - leave out menu bar
 	ImGui.SetNextWindowPos(Vector2(0,18))
+	ImGui.SetNextWindowBgAlpha(0.1)
 	var winSize = get_window().size
 	winSize.y -= 18
 	ImGui.SetNextWindowSize(winSize)

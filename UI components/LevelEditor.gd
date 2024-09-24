@@ -1,6 +1,7 @@
+extends Node
 class_name LevelEditor
 
-var worldTab = WorldEditorTab.new()
+@onready var worldTab = get_node("/root/Node/WorldEditorTab")
 
 func drawLevelEditor():
 		if (ImGui.BeginTabBar("##Tabs", ImGui.TabBarFlags_TabListPopupButton | ImGui.TabBarFlags_FittingPolicyScroll)):

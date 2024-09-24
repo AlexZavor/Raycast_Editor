@@ -1,10 +1,12 @@
+extends Node
 class_name WorldEditorTab
 
 var worldPallet = ColorPallet.new()
-var worldCanvas = WorldCanvas.new()
+@onready var worldCanvas = get_node("/root/Node/WorldCanvas")
 
 var selected_temp = 0
 var tool = 0
+
 
 func drawWorldEditorTab():
 	# Left section

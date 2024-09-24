@@ -1,10 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://c5hc5yrwly7mb"]
+[gd_scene load_steps=2 format=3 uid="uid://c5hc5yrwly7mb"]
 
 [ext_resource type="Script" path="res://MainWindow.gd" id="1_4nrkd"]
-[ext_resource type="Script" path="res://UI components/WorldCanvas.gd" id="2_jib0v"]
-[ext_resource type="Script" path="res://UI components/CanvasDrawer.gd" id="2_yqlq1"]
-[ext_resource type="Script" path="res://UI components/WorldTab.gd" id="4_pe36g"]
-[ext_resource type="Script" path="res://UI components/LevelEditor.gd" id="5_vy4hv"]
 
 [node name="Node" type="Node"]
 script = ExtResource("1_4nrkd")
@@ -30,18 +26,5 @@ access = 2
 filters = PackedStringArray("*.lvl")
 use_native_dialog = true
 
-[node name="CanvasDrawer" type="Node2D" parent="."]
-script = ExtResource("2_yqlq1")
-
-[node name="WorldCanvas" type="Node" parent="."]
-script = ExtResource("2_jib0v")
-
-[node name="WorldEditorTab" type="Node" parent="."]
-script = ExtResource("4_pe36g")
-
-[node name="LevelEditor" type="Node" parent="."]
-script = ExtResource("5_vy4hv")
-
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="SaveFileDialog" to="." method="_on_save_file_dialog_file_selected"]
-[connection signal="drawWorld" from="WorldCanvas" to="CanvasDrawer" method="_on_world_canvas_draw_world"]
