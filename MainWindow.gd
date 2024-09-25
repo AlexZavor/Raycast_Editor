@@ -56,7 +56,7 @@ func MainWindow():
 func _process(_delta: float) -> void:
 	MainMenu()
 	MainWindow()
-	ImGui.ShowDemoWindow()
+	#ImGui.ShowDemoWindow()
 
 
 func _on_file_dialog_file_selected(path: String) -> void:
