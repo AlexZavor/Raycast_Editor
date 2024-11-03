@@ -1,10 +1,10 @@
 extends Node
 class_name WorldEditorTab
+var type = "WorldEditorTab"
 
 @onready var worldPallet = get_node("ColorPallet")
-@onready var worldCanvas = get_node("/root/Node/WorldCanvas")
+@onready var worldCanvas = get_node("./WorldCanvas")
 
-var selected_temp = 0
 var tool = 0
 
 
@@ -28,8 +28,14 @@ func drawWorldEditorTab():
 	
 	# Right side
 	ImGui.BeginChild("right pane", Vector2(0, 0), ImGui.ChildFlags_Border)
-	for i in 15:
-		if (ImGui.SelectableEx("MyObject %d"%i, selected_temp == i)):
-			selected_temp = i
+	ImGui.SeparatorText("Objects")
+	ImGui.Text("Player")
+	ImGui.Separator()
+	ImGui.Text("Flower")
+	ImGui.Indent()
+	ImGui.Text("Position")
+	ImGui.SameLine()
+	ImGui.InputInt2("", [1,1])
+	ImGui.Unindent()
 	ImGui.EndChild()
 	ImGui.SameLine()

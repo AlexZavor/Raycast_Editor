@@ -25,7 +25,7 @@ func _process(_delta: float) -> void:
 func _input(event):
 	if(visible):
 		#if event is InputEventMouseButton:
-		if Input.is_action_just_pressed("click"):
+		if Input.is_action_pressed("click"):
 			#print("Mouse Click/Unclick at: ", event.position)
 			var click_x = (event.position.x)-(transform.get_origin().x)
 			click_x = floor(click_x/(width/canvas[0].size()))

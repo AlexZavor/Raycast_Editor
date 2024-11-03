@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://c5hc5yrwly7mb"]
+[gd_scene load_steps=8 format=3 uid="uid://c5hc5yrwly7mb"]
 
 [ext_resource type="Script" path="res://MainWindow.gd" id="1_4nrkd"]
 [ext_resource type="Script" path="res://UI components/WorldCanvas.gd" id="2_jib0v"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://UI components/WorldTab.gd" id="4_pe36g"]
 [ext_resource type="Script" path="res://UI components/ColorPallet.gd" id="5_8l57t"]
 [ext_resource type="Script" path="res://UI components/LevelEditor.gd" id="5_vy4hv"]
+[ext_resource type="Script" path="res://UI components/PlayerTab.gd" id="7_vyqpu"]
 
 [node name="Node" type="Node"]
 script = ExtResource("1_4nrkd")
@@ -32,24 +33,27 @@ filters = PackedStringArray("*.lvl")
 use_native_dialog = true
 
 [node name="CanvasDrawer" type="Node2D" parent="."]
-position = Vector2(460, 202)
+position = Vector2(301, 126)
 script = ExtResource("2_yqlq1")
-width = 300
-height = 300
-
-[node name="WorldCanvas" type="Node" parent="."]
-script = ExtResource("2_jib0v")
-
-[node name="WorldEditorTab" type="Node" parent="."]
-script = ExtResource("4_pe36g")
-
-[node name="ColorPallet" type="Node" parent="WorldEditorTab"]
-script = ExtResource("5_8l57t")
+width = 550
+height = 550
 
 [node name="LevelEditor" type="Node" parent="."]
 script = ExtResource("5_vy4hv")
 
+[node name="WorldEditorTab" type="Node" parent="LevelEditor"]
+script = ExtResource("4_pe36g")
+
+[node name="ColorPallet" type="Node" parent="LevelEditor/WorldEditorTab"]
+script = ExtResource("5_8l57t")
+
+[node name="WorldCanvas" type="Node" parent="LevelEditor/WorldEditorTab"]
+script = ExtResource("2_jib0v")
+
+[node name="PlayerEditorTab" type="Node" parent="LevelEditor"]
+script = ExtResource("7_vyqpu")
+
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="SaveFileDialog" to="." method="_on_save_file_dialog_file_selected"]
-[connection signal="touched" from="CanvasDrawer" to="WorldCanvas" method="_on_canvas_drawer_touched"]
-[connection signal="drawWorld" from="WorldCanvas" to="CanvasDrawer" method="_on_world_canvas_draw_world"]
+[connection signal="touched" from="CanvasDrawer" to="LevelEditor/WorldEditorTab/WorldCanvas" method="_on_canvas_drawer_touched"]
+[connection signal="drawWorld" from="LevelEditor/WorldEditorTab/WorldCanvas" to="CanvasDrawer" method="_on_world_canvas_draw_world"]
