@@ -5,6 +5,8 @@ var type = "WorldEditorTab"
 @onready var worldPallet = get_node("ColorPallet")
 @onready var worldCanvas = get_node("./WorldCanvas")
 
+@onready var world:RaycastWorld = get_node("/root/Node/RaycastWorld")
+
 var tool = 0
 
 
@@ -28,14 +30,22 @@ func drawWorldEditorTab():
 	
 	# Right side
 	ImGui.BeginChild("right pane", Vector2(0, 0), ImGui.ChildFlags_Border)
+	ImGui.SeparatorText("Player")
+	printPlayer(world.player)
 	ImGui.SeparatorText("Objects")
-	ImGui.Text("Player")
-	ImGui.Separator()
-	ImGui.Text("Flower")
-	ImGui.Indent()
-	ImGui.Text("Position")
-	ImGui.SameLine()
-	ImGui.InputInt2("", [1,1])
-	ImGui.Unindent()
+	for obj in world.objects:
+		ImGui.Separator()
+		#printObject(obj)
 	ImGui.EndChild()
 	ImGui.SameLine()
+
+func printPlayer(player:RaycastPlayer):
+	ImGui.SliderAngleEx("Rot.", player.rot, 0, 360)
+	var wid = ImGui.CalcItemWidth()
+	ImGui.PushItemWidth(wid/2)
+	ImGui.SliderFloat("##sliderposx",player.pos_x,0,world.worldSize[0])
+	ImGui.SameLine()
+	ImGui.SliderFloat("Position",player.pos_y,0,world.worldSize[1])
+	ImGui.PopItemWidth()
+	ImGui.ColorEdit3("Color", player.color)
+	ImGui.Separator()

@@ -2,21 +2,22 @@ extends Node
 
 const FileHandler = preload("res://FileHandler.gd")
 
-@onready var openLevel = get_node("/root/Node/LevelEditor")
+@onready var openLevel = get_node("/root/Node/RaycastWorld")
+@onready var editor = get_node("/root/Node/LevelEditor")
 
 var menuFloat = [0.5]
 var enabled = true
 var n = [0]
 var b = [true]
 
-func MainMenu():
+func MenuBar():
 	if (ImGui.BeginMainMenuBar()):
 		if (ImGui.BeginMenu("File")):
 			if(ImGui.MenuItemEx("Load", "Ctrl+O")):
 				var dialog = get_node("FileDialog")
 				dialog.popup()
 			if(ImGui.MenuItemEx("Save", "Ctrl+S", false, FileHandler.file != "")):
-				FileHandler.save()
+				FileHandler.save(openLevel)
 			if(ImGui.MenuItem("Save As..")):
 				var dialog = get_node("SaveFileDialog")
 				dialog.popup()
@@ -50,11 +51,11 @@ func MainWindow():
 	ImGui.SetNextWindowSize(winSize)
 	#Main screen
 	if (ImGui.Begin("Editor Window", [true], ImGui.WindowFlags_NoDecoration | ImGui.WindowFlags_NoMove | ImGui.WindowFlags_NoSavedSettings)):
-		openLevel.drawLevelEditor()
+		editor.drawLevelEditor(openLevel)
 	ImGui.End()
 
 func _process(_delta: float) -> void:
-	MainMenu()
+	MenuBar()
 	MainWindow()
 	#ImGui.ShowDemoWindow()
 
@@ -62,8 +63,8 @@ func _process(_delta: float) -> void:
 func _on_file_dialog_file_selected(path: String) -> void:
 	FileHandler.file = path
 	FileHandler.load()
-
+	openLevel.load(FileHandler.levelData)
 
 func _on_save_file_dialog_file_selected(path: String) -> void:
 	FileHandler.file = path
-	FileHandler.save()
+	FileHandler.save(openLevel)

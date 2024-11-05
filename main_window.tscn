@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://c5hc5yrwly7mb"]
+[gd_scene load_steps=9 format=3 uid="uid://c5hc5yrwly7mb"]
 
 [ext_resource type="Script" path="res://MainWindow.gd" id="1_4nrkd"]
 [ext_resource type="Script" path="res://UI components/WorldCanvas.gd" id="2_jib0v"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://UI components/ColorPallet.gd" id="5_8l57t"]
 [ext_resource type="Script" path="res://UI components/LevelEditor.gd" id="5_vy4hv"]
 [ext_resource type="Script" path="res://UI components/PlayerTab.gd" id="7_vyqpu"]
+[ext_resource type="Script" path="res://Objects/World.gd" id="8_si4g8"]
 
 [node name="Node" type="Node"]
 script = ExtResource("1_4nrkd")
@@ -52,6 +53,9 @@ script = ExtResource("2_jib0v")
 
 [node name="PlayerEditorTab" type="Node" parent="LevelEditor"]
 script = ExtResource("7_vyqpu")
+
+[node name="RaycastWorld" type="Node" parent="."]
+script = ExtResource("8_si4g8")
 
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
 [connection signal="file_selected" from="SaveFileDialog" to="." method="_on_save_file_dialog_file_selected"]
