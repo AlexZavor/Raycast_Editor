@@ -17,4 +17,4 @@ static func load():
 		print("No file Selected")
 	else:
 		if(FileAccess.file_exists(file)):
-			levelData = FileAccess.open(file, FileAccess.READ).get_as_text()
+			levelData = FileAccess.get_file_as_bytes(file)

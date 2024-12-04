@@ -2,6 +2,7 @@ extends Node2D
 class_name CanvasDrawer
 
 var canvas
+@onready var player = get_node("/root/Node/RaycastWorld").player
 
 @export var width:int
 @export var height:int
@@ -10,11 +11,13 @@ signal touched(x:int, y:int)
 
 func _draw():
 	if canvas: #yay error detection
+		var sizex = width/canvas.size()
+		var sizey = height/canvas[0].size()
 		for y in canvas.size():
 			for x in canvas[0].size():
-				var sizex = width/canvas.size()
-				var sizey = height/canvas[0].size()
 				draw_rect(Rect2(x*sizex,y*sizey,sizex,sizey), canvas[y][x])
+		if player:
+			draw_rect(Rect2(player.pos_x[0]*sizex, player.pos_y[0]*sizey, 5,5), Color(player.color[0],player.color[1],player.color[2]))
 
 func _process(_delta: float) -> void:
 	queue_redraw()
