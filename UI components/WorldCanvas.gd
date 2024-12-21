@@ -5,7 +5,7 @@ var newWorldSize = [0,0]
 var popupErrText = ""
 var settool = 0
 
-@onready var world = get_node("/root/Node/RaycastWorld")
+@onready var world:RaycastWorld = get_node("/root/Node/RaycastWorld")
 @onready var pallet = get_node("../ColorPallet")
 
 signal drawWorld(data:Array)
@@ -53,4 +53,5 @@ func drawWorldCanvas(tool):
 
 
 func _on_canvas_drawer_touched(x: int, y: int) -> void:
-	world.worldCanvas[y][x] = settool
+	if(world.selected_editor == 0):
+		world.worldCanvas[y][x] = settool

@@ -2,7 +2,7 @@ extends Node2D
 class_name CanvasDrawer
 
 var canvas
-@onready var player = get_node("/root/Node/RaycastWorld").player
+@onready var world:RaycastWorld = get_node("/root/Node/RaycastWorld")
 
 @export var width:int
 @export var height:int
@@ -16,8 +16,14 @@ func _draw():
 		for y in canvas.size():
 			for x in canvas[0].size():
 				draw_rect(Rect2(x*sizex,y*sizey,sizex,sizey), canvas[y][x])
-		if player:
-			draw_rect(Rect2(player.pos_x[0]*sizex, player.pos_y[0]*sizey, 5,5), Color(player.color[0],player.color[1],player.color[2]))
+		if world.player && world.selected_editor == 0:
+			draw_rect(Rect2(world.player.pos_x[0]*sizex, 
+							world.player.pos_y[0]*sizey, 5,5), 
+							Color(world.player.color[0],world.player.color[1],world.player.color[2]))
+			for obj in world.objects:
+				draw_rect(Rect2(obj.x[0]*sizex, 
+								obj.y[0]*sizey, 5,5), 
+								Color(obj.color_disp[0],obj.color_disp[1],obj.color_disp[2]))
 
 func _process(_delta: float) -> void:
 	queue_redraw()

@@ -2,7 +2,7 @@ extends Node
 class_name ColorPallet
 
 # Color pallet data, preloaded with bg color of black
-@onready var world = get_node("/root/Node/RaycastWorld")
+@onready var world:RaycastWorld = get_node("/root/Node/RaycastWorld")
 var colorSelection = 0;
 
 # get Color from color array
@@ -18,7 +18,7 @@ func drawPallet(width):
 	ImGui.BeginGroup()
 	# draw each member of pallet
 	for i in world.colorPallet.size():
-		var flags = ImGui.ColorEditFlags_NoBorder if (i==colorSelection) else 0
+		var flags = ImGui.ColorEditFlags_NoBorder if (i==colorSelection) else ImGui.ColorEditFlags_None
 		if(i == 0):
 			# Color zero is background
 			if(ImGui.ColorButton("Background", color(world.colorPallet[i]), flags )):
@@ -40,6 +40,11 @@ func drawPallet(width):
 		ImGui.ColorEdit3("color %d"%colorSelection, world.colorPallet[colorSelection], ImGui.ColorEditFlags_NoInputs | ImGui.ColorEditFlags_NoLabel | ImGui.ColorEditFlags_NoBorder)
 	ImGui.SameLine()
 	ImGui.Text("color %d"%colorSelection)
+	if(colorSelection != 0):
+		if ImGui.Checkbox("has texture", [world.has_texture(world.colorPallet[colorSelection])]):
+			var tex:RaycastTexture = RaycastTexture.new()
+			tex.color_replaced.append(world.colorPallet[colorSelection])
+			world.textures.append(tex)
 	ImGui.EndGroup()
 
 #translate array to color array
