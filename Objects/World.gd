@@ -1,6 +1,44 @@
 class_name RaycastWorld
 extends Node
 
+#######################################
+# Raycast World Format
+# --------------------------
+# "Plain text intro string\n"
+# \0
+# "WLD"
+# 	uint8_t x
+# 	uint8_t y
+# 	uint8_t worldarr[x*y]
+# 	uint8_t color_pallet_size
+# 	rgba32_t color_pallet[color_pallet_size]
+# \0
+# "PLR"
+# 	float32 x
+# 	float32 y
+# 	rgba32_t player_color
+# \0
+# ------opt-------
+# "TEX"
+# 	uint8_t num_texures
+# 	for x in num_textures
+#	 	uint8_t w
+#	 	uint8_t h
+#		rgba32_t color[w*x]
+# \0
+# "OBJ"
+# 	uint8_t num_objects
+# 	for x in num_objects
+#	 	uint8_t w
+#	 	uint8_t h
+#		rgba32_t color[w*x]
+#	 	uint8_t x
+#	 	uint8_t y
+#		rgba32_t map/icon_color
+# \0
+
+
+
 var player:RaycastPlayer = RaycastPlayer.new()
 var objects = []
 var textures = []
